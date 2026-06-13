@@ -223,7 +223,7 @@ def scan_stock(
         avg_turnover_20 = float(
             df["Turnover"]
             .tail(20)
-            .mean()
+            .mean() #算術平均
         )
 
         hist = float(latest["Histogram"])
