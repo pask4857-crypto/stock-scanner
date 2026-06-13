@@ -351,7 +351,7 @@ def export_excel(result):
 
     df.to_excel(
         file_name,
-        index=False
+        index=False #不輸出索引欄位
     )
 
     print(
