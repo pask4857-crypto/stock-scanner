@@ -59,33 +59,28 @@ def kd_overbought_recent(df, lookback=20):
         today = df.iloc[current_idx]
         yesterday = df.iloc[current_idx - 1]
 
-        try:
+        recent = df.iloc[current_idx - 5:current_idx]
 
-            recent = df.iloc[current_idx - 5:current_idx]
+        overbought = (
+            (recent["K"] > 80).all()
+            and
+            (recent["D"] > 80).all()
+        )
 
-            overbought = (
-                (recent["K"] > 80).all()
-                and
-                (recent["D"] > 80).all()
-            )
+        dead_cross = (
+            yesterday["K"] > yesterday["D"]
+            and
+            today["K"] < today["D"]
+        )
 
-            dead_cross = (
-                yesterday["K"] > yesterday["D"]
-                and
-                today["K"] < today["D"]
-            )
+        if overbought and dead_cross:
 
-            if overbought and dead_cross:
+            cross_date = today.name
 
-                cross_date = today.name
-
-                return {
-                    "found": True,
-                    "date": cross_date
-                }
-
-        except Exception:
-            continue
+            return {
+                "found": True,
+                "date": cross_date
+            }
 
     return {
         "found": False,
@@ -141,14 +136,9 @@ def macd_green_shrinking_days(
 
         if (
             pd.notna(yesterday)
-            and
-            pd.notna(today)
-            and
-            yesterday < 0
-            and
-            today < 0
-            and
-            today > yesterday
+            and pd.notna(today)
+            #需判斷更多條件時，可用「all(pd.notna(x) for x in (yesterday, today))」的寫法
+            and yesterday < today < 0
         ):
             return days_ago
 

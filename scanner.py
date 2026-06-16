@@ -14,7 +14,9 @@ from indicators import (
 
 )
 
-def get_stock_data(stock_id):
+def get_stock_data(
+    stock_id: str
+) -> pd.DataFrame:
 
     cache_dir = "cache"
 
@@ -60,9 +62,7 @@ def get_stock_data(stock_id):
                     )
 
             # 增量更新
-            last_date = pd.to_datetime(
-                df.index.max()
-            )
+            last_date = df.index.max()
 
             start_date = last_date
 
@@ -71,7 +71,7 @@ def get_stock_data(stock_id):
                 f"({start_date.date()} ~ 今天)"
             )
 
-            new_df = yf.download(
+            new_df: pd.DataFrame = yf.download(
                 stock_id,
                 start=start_date.strftime(
                     "%Y-%m-%d"
@@ -143,6 +143,8 @@ def get_stock_data(stock_id):
 
             print(e)
 
+            return pd.DataFrame()
+
     # ==========================
     # 首次下載
     # ==========================
@@ -150,7 +152,7 @@ def get_stock_data(stock_id):
         f"下載資料: {stock_id}"
     )
 
-    df = yf.download(
+    df: pd.DataFrame = yf.download(
         stock_id,
         period="1y",
         auto_adjust=True,
@@ -215,10 +217,6 @@ def scan_stock(
         latest = df.iloc[-1]
 
         close_price = float(latest["Close"])
-
-        today_turnover = float(
-            latest["Turnover"]
-        )
 
         avg_turnover_20 = float(
             df["Turnover"]
