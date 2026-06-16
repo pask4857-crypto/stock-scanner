@@ -3,3 +3,4 @@ numpy
 yfinance
 ta
 openpyxl
+twstock

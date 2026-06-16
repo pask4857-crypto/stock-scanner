@@ -5,12 +5,8 @@ import pandas as pd
 
 
 def resource_path(relative_path):
-
-    # PyInstaller 執行時
     if getattr(sys, "frozen", False):
-        base_path = Path(sys._MEIPASS)
-
-    # 開發模式
+        base_path = Path(getattr(sys, "_MEIPASS"))
     else:
         base_path = Path(__file__).parent
 
